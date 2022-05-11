@@ -36,11 +36,14 @@ for filename in filenames:
                     aux = _json[key]
 
                     data = {
-                        'pollutant': contaminante
+                        'pollutant': contaminante[0]
                     }
 
                     for i in range(7, 38):
-                        data['D' + str(i - 6)] = row[i]
+                        try:
+                            data['D' + str(i - 6)] = float(row[i]) * contaminante[1]
+                        except Exception:
+                            None
 
                     aux['data'].append(data)
                     _json[key] = aux
@@ -60,19 +63,21 @@ for filename in filenames:
 
                         'data': [
                             {
-                                'pollutant': contaminante,
+                                'pollutant': contaminante[0],
                             }
                         ]
                     }
 
                     for i in range(7, 38):
-                        aux['data'][-1]['D' + str(i - 6)] = row[i]
+                        try:
+                            aux['data'][-1]['D' + str(i - 6)] = float(row[i]) * contaminante[1]
+                        except Exception:
+                            None
 
                     _json[key] = aux
 
             except Exception:
                 None
-
 
 
 for key, value in _json.items():
