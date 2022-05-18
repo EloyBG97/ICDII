@@ -35,6 +35,20 @@ def __read_code_unit(filename):
 
     return dict
 
+def estaciones():
+    dict = {}
+
+    with open('estaciones.csv','r',encoding='UTF8') as f:
+        reader = csv.reader(f, delimiter=';')
+
+        for row in reader:
+            code = row[0]
+            name = row[6]
+
+            dict[code] = name
+
+    return dict
+
 def provincias():
     return __read_code('provincias.csv')
 
