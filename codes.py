@@ -24,9 +24,14 @@ def __read_code_unit(filename):
         for row in reader:
             code = row[0]
             name = row[1]
-            magnitude = int(row[2])
+            symbol = row[2]
+            unit = row[3]
 
-            dict[code] = (name, 1/magnitude)
+            dict[code] = {
+                'name': name,
+                'symbol': symbol,
+                'unit': unit
+            }
 
     return dict
 

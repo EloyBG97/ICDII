@@ -28,7 +28,7 @@ for filename in filenames:
 
             try:
                 info_loc = municipios[row[0] + '.' + row[1]]
-                
+
                 cod_comunidad_autonoma = info_loc['autonoma']
                 cod_provincia = info_loc['provincia']
 
@@ -41,22 +41,34 @@ for filename in filenames:
                 key = str(row[5]) + str(row[6] + str(provincia) + str(municipio) + str(row[2]))
 
                 if(key in _json.keys()):
+                    values = []
+                    for i in range(7, 38):
+                        try:
+                            values.append(float(row[i]))
+                        except Exception:
+                            values.append(None)
+
                     aux = _json[key]
 
                     data = {
-                        'pollutant': contaminante[0]
+                        'pollutant': contaminante['name'],
+                        'symbol': contaminante['symbol'],
+                        'unit': contaminante['unit'],
+                        'values': values
                     }
-
-                    for i in range(7, 38):
-                        try:
-                            data['D' + str(i - 6)] = float(row[i]) * contaminante[1]
-                        except Exception:
-                            None
 
                     aux['data'].append(data)
                     _json[key] = aux
 
                 else:
+
+                    values = []
+                    for i in range(7, 38):
+                        try:
+                            values.append(float(row[i]))
+                        except Exception:
+                            values.append(None)
+
                     aux = {
                         'location': {
                             'provincia': provincia,
@@ -72,16 +84,15 @@ for filename in filenames:
 
                         'data': [
                             {
-                                'pollutant': contaminante[0],
+                                'pollutant': contaminante['name'],
+                                'symbol': contaminante['symbol'],
+                                'unit': contaminante['unit'],
+                                'values': values
                             }
                         ]
                     }
 
-                    for i in range(7, 38):
-                        try:
-                            aux['data'][-1]['D' + str(i - 6)] = float(row[i]) * contaminante[1]
-                        except Exception:
-                            None
+                    
 
                     _json[key] = aux
 

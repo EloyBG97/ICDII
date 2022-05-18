@@ -1,8 +1,14 @@
-17;Arsénico;100000000
-28;Cadmio;1000000000
-62;Niquel;1000000000
-19;Plomo;1000000
-9;PM2.5;1000000
-10;PM10;1000000
-27;Benzopireno;1000000000
-30;Benceno;1000000
+﻿1;DIÓXIDO DE AZUFRE;SO2;µg/m3;Contaminantes con valor legislado
+6;MONÓXIDO DE CARBONO;CO;mg/m3;Contaminantes con valor legislado
+7;MONÓXIDO DE NITRÓGENO;NO;µg/m3;
+8;DIÓXIDO DE NITRÓGENO;NO2;µg/m3;Contaminantes con valor legislado
+9;PARTÍCULAS EN SUSPENSIÓN <2,5µM;PM2.5;µg/m3;Contaminantes con valor legislado
+10;PARTÍCULAS EN SUSPENSIÓN <10µM;PM10;µg/m3;Contaminantes con valor legislado
+12;ÓXIDOS DE NITRÓGENO TOTALES;NOX;µg/m3 NO2;Contaminantes con valor legislado
+14;OZONO;O3;µg/m3;Contaminantes con valor legislado
+17;ARSENICO (PM10);As;ng/m3;Contaminantes con valor legislado
+19;PLOMO (PM10);Pb;µg/m3;Contaminantes con valor legislado
+27;BENZO(A)PIRENO (PM10);BAP;ng/m3;Contaminantes con valor legislado
+28;CADMIO (PM10);Cd;ng/m3;Contaminantes con valor legislado
+30;BENCENO;C6H6;µg/m3;Contaminantes con valor legislado
+62;NÍQUEL (PM10);NI;ng/m3;Contaminantes con valor legislado
