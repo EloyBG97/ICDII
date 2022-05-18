@@ -16,6 +16,7 @@ jsons = []
 _json = {}
 provincias = codes.provincias()
 municipios = codes.municipios()
+comunidad_autonoma = codes.comunidad_autonoma()
 contaminantes = codes.contaminantes()
 
 for filename in filenames:
@@ -26,8 +27,15 @@ for filename in filenames:
         for row in reader:
 
             try:
-                provincia = provincias[row[0]]
-                municipio = municipios[row[1]]
+                info_loc = municipios[row[0] + '.' + row[1]]
+                
+                cod_comunidad_autonoma = info_loc['autonoma']
+                cod_provincia = info_loc['provincia']
+
+                com_autonoma = comunidad_autonoma[cod_comunidad_autonoma]
+                provincia = provincias[cod_provincia]
+                municipio = info_loc['nombre']
+
                 contaminante = contaminantes[row[3]]
                 
                 key = str(row[5]) + str(row[6] + str(provincia) + str(municipio) + str(row[2]))
@@ -53,6 +61,7 @@ for filename in filenames:
                         'location': {
                             'provincia': provincia,
                             'municipio': municipio,
+                            'com_autonoma': com_autonoma,
                             'estacion': row[2]
                         },
 
