@@ -4,6 +4,7 @@ from sklearn.impute import KNNImputer
 from datetime import datetime
 import json
 import os
+import certifi
 
 # Requires the PyMongo package.
 # https://api.mongodb.com/python/current
@@ -53,7 +54,7 @@ def auth():
 def main():
     auth_data = auth()
     print("Authenticating as {user}".format(user = auth_data[0]))
-    client = MongoClient('mongodb+srv://{user}:{passw}@cluster0.itzr6.mongodb.net/test'.format(user = auth_data[0], passw = auth_data[1]))
+    client = MongoClient('mongodb+srv://{user}:{passw}@cluster0.itzr6.mongodb.net/test'.format(user = auth_data[0], passw = auth_data[1]), tlsCAFile=certifi.where())
     result = client['ICDII']['AirQuality'].aggregate([
         {
             '$unwind': {
