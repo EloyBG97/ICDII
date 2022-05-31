@@ -39,7 +39,7 @@ def scale(unit, level):
 
 def auth():
     
-    if(os.path.exists('..auth.json')):
+    if(os.path.exists('../auth.json')):
         with open("../auth.json", 'r') as f:
             auth_data = json.load(f)
 
