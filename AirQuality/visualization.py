@@ -5,6 +5,7 @@ from datetime import datetime
 import json
 import os
 import certifi
+import seaborn as sns
 
 # Requires the PyMongo package.
 # https://api.mongodb.com/python/current
@@ -128,15 +129,39 @@ def main():
 
 
     #Step 3: Datetime
+
     df['Date'] = df.apply(lambda row: datetime(row["year"], row["month"], 1), axis = 1)
     del df["year"]
     del df["month"]
 
     
-    print(df.head())
+
+    df_v = df[df["com_autonoma"] == "Andalucía"]
+
+    print(df_v.head())
 
     #Visualize...
 
+    g = sns.relplot(data = df_v, x = "Date", y = "avg_level", hue = "pollutant", col = "pollutant")
+
+    for pollutant, ax in g.axes_dict.items():
+
+        # Add the title as an annotation within the plot
+        ax.text(.8, .85, pollutant, transform=ax.transAxes, fontweight="bold")
+
+        # Plot every year's time series in the background
+        sns.lineplot(
+            data=df_v, x="Date", y="avg_level",
+            estimator=None, color=".7", linewidth=1, ax=ax,
+        )
+
+    # Reduce the frequency of the x axis ticks
+    ax.set_xticks(ax.get_xticks()[::2])
+
+    # Tweak the supporting aspects of the plot
+    g.set_titles("")
+    g.set_axis_labels("", "Passengers")
+    g.tight_layout()
 
 if(__name__ == '__main__'):
     main()

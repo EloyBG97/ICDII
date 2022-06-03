@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 import pandas as pd
-from sklearn.impute import KNNImputer
 from datetime import datetime
 import json
 import os
@@ -8,33 +7,6 @@ import certifi
 
 # Requires the PyMongo package.
 # https://api.mongodb.com/python/current
-
-def dist(X, Y, metric, **kwds):
-    total = 0
-
-    if(X["provincia"] != Y["provincia"]):
-        total += 1
-
-    if(X["com_autonoma"] != Y["com_autonoma"]):
-        total += 1
-
-    total += abs(X["year"] - Y["year"])
-    total += abs(X["month"] - Y["month"])
-
-    return total
-
-def scale(unit, level):
-
-    if(unit == "µg/m3"):
-        level *= 10e-6
-
-    elif(unit == "mg/m3"):
-        level *= 10e-3
-
-    elif(unit == "ng/m3"):
-        level *= 10e-9
-
-    return level
 
 
 def auth():
@@ -87,6 +59,9 @@ def main():
     #Step 1: Load Data
     list_cur = list(result)
     df = pd.DataFrame(list_cur)
+
+    
+    df["update"] = df.apply(lambda row: datetime(int(str(row["update"])[0:4]), int(str(row["update"])[4:6]), int(str(row["update"])[6:])), axis = 1)
 
     print(df.head())
 
