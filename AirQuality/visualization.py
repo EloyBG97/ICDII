@@ -124,8 +124,8 @@ def main():
     df["provincia_cat"] = df["provincia"].cat.codes
 
     imputer = KNNImputer(n_neighbors=4)
-    df["avg_level"] = imputer.fit_transform(
-        df[["avg_level", "pollutant_cat", "com_autonoma_cat", "provincia_cat", "year", "month"]])[:, 0]
+    df["avg_level"] = imputer.fit_transform(df[["avg_level", "pollutant_cat", "com_autonoma_cat", "provincia_cat", "year", "month"]])[:, 0]
+
 
     del df["pollutant_cat"]
     del df["com_autonoma_cat"]
@@ -136,18 +136,23 @@ def main():
         row["unit"], row["avg_level"]), axis=1)
     del df["unit"]
 
- # Step 3: Datetime
+    # Step 3: Datetime
+    df_pollutants = df
+    df_pollutants['Date'] = df_pollutants.apply(lambda row: datetime(row["year"], row["month"], 1), axis=1)
+    del df_pollutants["year"]
+    del df_pollutants["month"]
 
-   # df['Date'] = df.apply(lambda row: datetime(
-    #    row["year"], row["month"], 1), axis=1)
-    #del df["year"]
+    #Problem: Not all provincias get info about all pollutants
+    df_pollutants  = df_pollutants.pivot(index  = ["Date", "com_autonoma", "provincia"], columns = 'pollutant', values = 'avg_level')
+    df_pollutants.reset_index(drop = False, inplace = True)
+    print(df_pollutants.head())
+
 
     df_v = df[(df["com_autonoma"] == "Andalucía")]
 
     print(df_v.head())
 
     # Visualize...
-
     f = sns.lineplot(data=df_v, x="month", y="avg_level", hue="year")
     plt.xticks(rotation=15)
     plt.title('Pollution Average Level in Andalucia')
