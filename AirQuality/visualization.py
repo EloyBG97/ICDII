@@ -1,14 +1,18 @@
 # %%
+from click import style
 from pymongo import MongoClient
 import pandas as pd
 from sklearn.impute import KNNImputer
 from datetime import datetime
 import json
 import os
+import math
 import certifi
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import matplotlib.ticker as ticker
+import plotly.graph_objects as go
 import numpy as np
 
 
@@ -124,8 +128,8 @@ def main():
     df["provincia_cat"] = df["provincia"].cat.codes
 
     imputer = KNNImputer(n_neighbors=4)
-    df["avg_level"] = imputer.fit_transform(df[["avg_level", "pollutant_cat", "com_autonoma_cat", "provincia_cat", "year", "month"]])[:, 0]
-
+    df["avg_level"] = imputer.fit_transform(
+        df[["avg_level", "pollutant_cat", "com_autonoma_cat", "provincia_cat", "year", "month"]])[:, 0]
 
     del df["pollutant_cat"]
     del df["com_autonoma_cat"]
@@ -138,24 +142,40 @@ def main():
 
     # Step 3: Datetime
     df_pollutants = df
-    df_pollutants['Date'] = df_pollutants.apply(lambda row: datetime(row["year"], row["month"], 1), axis=1)
-    del df_pollutants["year"]
-    del df_pollutants["month"]
+    df_pollutants['Date'] = df_pollutants.apply(
+        lambda row: datetime(row["year"], row["month"], 1), axis=1)
+    # del df_pollutants["year"]
+    # del df_pollutants["month"]
 
-    #Problem: Not all provincias get info about all pollutants
-    df_pollutants  = df_pollutants.pivot(index  = ["Date", "com_autonoma", "provincia"], columns = 'pollutant', values = 'avg_level')
-    df_pollutants.reset_index(drop = False, inplace = True)
-    print(df_pollutants.head())
+    # Problem: Not all provincias get info about all pollutants
+    df_pollutants = df_pollutants.pivot(
+        index=["Date", "year", "month", "com_autonoma", "provincia"], columns='pollutant', values='avg_level')
+    df_pollutants.reset_index(drop=False, inplace=True)
+    # print(df_pollutants.head())
 
-
-    df_v = df[(df["com_autonoma"] == "Andalucía")]
-
+    df_v = df_pollutants[(df_pollutants["provincia"] == "Granada")]
+    year = list(df_pollutants['year'])
+    opsd_365d = df_pollutants['NÍQUEL (PM10)'].rolling(
+        window=365, center=True, min_periods=360).mean()
+    Granada = df_v.groupby(['provincia', 'year', 'CADMIO (PM10)'])
     print(df_v.head())
 
     # Visualize...
-    f = sns.lineplot(data=df_v, x="month", y="avg_level", hue="year")
-    plt.xticks(rotation=15)
-    plt.title('Pollution Average Level in Andalucia')
+  #  sns.set_theme(style="darkgrid")
+ #   f = sns.lineplot(data=df_pollutants, x="Date",
+ #                    y="PARTÍCULAS EN SUSPENSIÓN <10µM", hue="provincia", ci=10, sort="provincia")
+    # plt.xticks(rotation=15)
+   # plt.title('SUSPENDED PARTICLES <10µM Pollution Average Level in Spain')
+    # plt.show()
+
+    plt.subplots(figsize=(12, 10))
+    sns.barplot(x='avg_level', y='provincia', data=df,
+                palette='inferno', edgecolor=sns.color_palette('dark', 7), hue='year')
+    plt.ylabel('CITIES', fontsize=15)
+    plt.xticks(rotation=45, fontsize=10)
+    plt.xlabel('POLLUTANT', fontsize=15)
+    plt.title('AVERAGE AIR POLLUTANT IN SPAIN', fontsize=24)
+    plt.savefig('AVG_AIR_POLLUTANT IN SPAIN.png')
     plt.show()
 
 
